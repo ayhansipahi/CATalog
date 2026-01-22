@@ -33,7 +33,7 @@ export default function RandomScreen() {
       const data = await catApi.getRandomCat();
       setCat(data);
     } catch (error) {
-      console.error('Rastgele kedi yüklenemedi:', error);
+      console.error('Failed to load random cat:', error);
     } finally {
       setLoading(false);
     }
@@ -43,12 +43,7 @@ export default function RandomScreen() {
 
   return (
     <LinearGradient colors={theme.colors.gradients.main} style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + theme.spacing.md }]}>
-        <Text style={styles.title}>Şanslı Kedi</Text>
-        <Text style={styles.subtitle}>Rastgele bir kedi keşfet</Text>
-      </View>
-
-      <View style={styles.content}>
+      <View style={[styles.content, { paddingTop: insets.top + 56 }]}>
         {cat ? (
           <Pressable
             onPress={() => breed && router.push(`/breed/${breed.id}`)}
@@ -70,7 +65,7 @@ export default function RandomScreen() {
           <View style={styles.placeholder}>
             <Text style={styles.placeholderEmoji}>🎲</Text>
             <Text style={styles.placeholderText}>
-              Butona basarak{'\n'}şanslı kedini bul!
+              Press the button{'\n'}to find your lucky cat!
             </Text>
           </View>
         )}
@@ -95,7 +90,7 @@ export default function RandomScreen() {
               <>
                 <Text style={styles.buttonEmoji}>🎲</Text>
                 <Text style={styles.buttonText}>
-                  {cat ? 'Başka Kedi' : 'Kedi Bul'}
+                  {cat ? 'Another Cat' : 'Find Cat'}
                 </Text>
               </>
             )}
@@ -109,19 +104,6 @@ export default function RandomScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingBottom: theme.spacing.md,
-  },
-  title: {
-    ...theme.typography.largeTitle,
-    color: theme.colors.text.primary,
-  },
-  subtitle: {
-    ...theme.typography.caption,
-    color: theme.colors.text.tertiary,
-    marginTop: 2,
   },
   content: {
     flex: 1,

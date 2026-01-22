@@ -1,54 +1,55 @@
+import Constants from 'expo-constants';
 import { Breed, CatImage } from '@/types/breed';
 
 const BASE_URL = 'https://api.thecatapi.com/v1';
 
-// Ücretsiz API key al: https://thecatapi.com/signup
-// Şimdilik key olmadan da çalışır (limitli)
-const API_KEY = '';
+// API key is read from .env file
+// Get a free key at: https://thecatapi.com/signup
+const API_KEY = Constants.expoConfig?.extra?.catApiKey || '';
 
 const headers: HeadersInit = API_KEY
   ? { 'x-api-key': API_KEY }
   : {};
 
 export const catApi = {
-  // Tüm ırkları getir
+  // Get all breeds
   async getBreeds(): Promise<Breed[]> {
     const response = await fetch(`${BASE_URL}/breeds`, { headers });
-    if (!response.ok) throw new Error('Irklar yüklenemedi');
+    if (!response.ok) throw new Error('Failed to load breeds');
     return response.json();
   },
 
-  // Tek bir ırk getir
+  // Get a single breed
   async getBreed(id: string): Promise<Breed> {
     const response = await fetch(`${BASE_URL}/breeds/${id}`, { headers });
-    if (!response.ok) throw new Error('Irk bulunamadı');
+    if (!response.ok) throw new Error('Breed not found');
     return response.json();
   },
 
-  // Irka ait görselleri getir
+  // Get images for a breed
   async getBreedImages(breedId: string, limit: number = 5): Promise<CatImage[]> {
     const response = await fetch(
       `${BASE_URL}/images/search?breed_ids=${breedId}&limit=${limit}`,
       { headers }
     );
-    if (!response.ok) throw new Error('Görseller yüklenemedi');
+    if (!response.ok) throw new Error('Failed to load images');
     return response.json();
   },
 
-  // Irkın kapak görselini getir
+  // Get breed cover image
   async getBreedImage(imageId: string): Promise<CatImage> {
     const response = await fetch(`${BASE_URL}/images/${imageId}`, { headers });
-    if (!response.ok) throw new Error('Görsel bulunamadı');
+    if (!response.ok) throw new Error('Image not found');
     return response.json();
   },
 
-  // Rastgele kedi görseli
+  // Get random cat image
   async getRandomCat(): Promise<CatImage> {
     const response = await fetch(
       `${BASE_URL}/images/search?has_breeds=1&limit=1`,
       { headers }
     );
-    if (!response.ok) throw new Error('Rastgele kedi bulunamadı');
+    if (!response.ok) throw new Error('Failed to load random cat');
     const data = await response.json();
     return data[0];
   },

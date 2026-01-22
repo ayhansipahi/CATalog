@@ -32,7 +32,7 @@ export default function HomeScreen() {
       const data = await catApi.getBreeds();
       setBreeds(data);
     } catch (error) {
-      console.error('Irklar yüklenemedi:', error);
+      console.error('Failed to load breeds:', error);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -67,19 +67,16 @@ export default function HomeScreen() {
     return (
       <LinearGradient colors={theme.colors.gradients.main} style={styles.loading}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
-        <Text style={styles.loadingText}>Kediler yükleniyor...</Text>
+        <Text style={styles.loadingText}>Loading cats...</Text>
       </LinearGradient>
     );
   }
 
   return (
     <LinearGradient colors={theme.colors.gradients.main} style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + theme.spacing.md }]}>
-        <Text style={styles.title}>CATalog</Text>
-        <Text style={styles.subtitle}>{breeds.length} kedi ırkı</Text>
+      <View style={[styles.searchContainer, { paddingTop: insets.top + 56 }]}>
+        <SearchBar value={search} onChangeText={setSearch} />
       </View>
-
-      <SearchBar value={search} onChangeText={setSearch} />
 
       <FlatList
         data={filteredBreeds}
@@ -98,7 +95,7 @@ export default function HomeScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <Text style={styles.emptyEmoji}>🔍</Text>
-            <Text style={styles.emptyText}>Sonuç bulunamadı</Text>
+            <Text style={styles.emptyText}>No results found</Text>
           </View>
         }
       />
@@ -120,18 +117,8 @@ const styles = StyleSheet.create({
     color: theme.colors.text.secondary,
     marginTop: theme.spacing.md,
   },
-  header: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingBottom: theme.spacing.md,
-  },
-  title: {
-    ...theme.typography.largeTitle,
-    color: theme.colors.text.primary,
-  },
-  subtitle: {
-    ...theme.typography.caption,
-    color: theme.colors.text.tertiary,
-    marginTop: 2,
+  searchContainer: {
+    paddingHorizontal: theme.spacing.sm,
   },
   list: {
     paddingHorizontal: theme.spacing.sm,

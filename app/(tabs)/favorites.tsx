@@ -29,16 +29,8 @@ export default function FavoritesScreen() {
 
   return (
     <LinearGradient colors={theme.colors.gradients.main} style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + theme.spacing.md }]}>
-        <Text style={styles.title}>Favoriler</Text>
-        <Text style={styles.subtitle}>
-          {favorites.length > 0
-            ? `${favorites.length} favori kedi`
-            : 'Henüz favori yok'}
-        </Text>
-      </View>
-
-      {favorites.length > 0 ? (
+      <View style={{ paddingTop: insets.top + 56 }}>
+        {favorites.length > 0 ? (
         <FlatList
           data={favorites}
           renderItem={renderBreed}
@@ -48,14 +40,15 @@ export default function FavoritesScreen() {
           showsVerticalScrollIndicator={false}
         />
       ) : (
-        <View style={styles.empty}>
-          <Text style={styles.emptyEmoji}>💝</Text>
-          <Text style={styles.emptyTitle}>Henüz favori yok</Text>
-          <Text style={styles.emptyText}>
-            Beğendiğin kedi ırklarını{'\n'}kalp ikonuna basarak favorilere ekle
-          </Text>
-        </View>
-      )}
+          <View style={styles.empty}>
+            <Text style={styles.emptyEmoji}>💝</Text>
+            <Text style={styles.emptyTitle}>No favorites yet</Text>
+            <Text style={styles.emptyText}>
+              Add cat breeds you like{'\n'}by tapping the heart icon
+            </Text>
+          </View>
+        )}
+      </View>
     </LinearGradient>
   );
 }
@@ -63,19 +56,6 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingBottom: theme.spacing.md,
-  },
-  title: {
-    ...theme.typography.largeTitle,
-    color: theme.colors.text.primary,
-  },
-  subtitle: {
-    ...theme.typography.caption,
-    color: theme.colors.text.tertiary,
-    marginTop: 2,
   },
   list: {
     paddingHorizontal: theme.spacing.sm,

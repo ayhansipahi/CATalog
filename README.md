@@ -1,6 +1,6 @@
 # 🐱 CATalog
 
-iOS için Liquid Glass tasarımlı kedi ansiklopedisi uygulaması.
+Kedi ansiklopedisi uygulaması.
 
 ## Özellikler
 

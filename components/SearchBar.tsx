@@ -18,7 +18,7 @@ interface SearchBarProps {
 export function SearchBar({
   value,
   onChangeText,
-  placeholder = 'Irk ara...',
+  placeholder = 'Search breeds...',
 }: SearchBarProps) {
   return (
     <View style={styles.container}>

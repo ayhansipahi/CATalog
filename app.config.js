@@ -1,0 +1,30 @@
+import 'dotenv/config';
+
+export default {
+  expo: {
+    name: 'CATalog',
+    slug: 'catalog',
+    version: '1.0.0',
+    orientation: 'portrait',
+    icon: './assets/icon.png',
+    userInterfaceStyle: 'light',
+    scheme: 'catalog',
+    splash: {
+      backgroundColor: '#F8F9FA',
+    },
+    assetBundlePatterns: ['**/*'],
+    ios: {
+      supportsTablet: true,
+      bundleIdentifier: 'com.yourname.catalog',
+      buildNumber: '1',
+    },
+    newArchEnabled: true,
+    plugins: ['expo-router', 'expo-asset'],
+    experiments: {
+      typedRoutes: true,
+    },
+    extra: {
+      catApiKey: process.env.CAT_API_KEY || '',
+    },
+  },
+};

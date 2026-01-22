@@ -48,7 +48,7 @@ export default function BreedDetailScreen() {
       setBreed(breedData);
       setImages(imagesData);
     } catch (error) {
-      console.error('Irk yüklenemedi:', error);
+      console.error('Failed to load breed:', error);
     } finally {
       setLoading(false);
     }
@@ -77,7 +77,7 @@ export default function BreedDetailScreen() {
   if (!breed) {
     return (
       <LinearGradient colors={theme.colors.gradients.main} style={styles.loading}>
-        <Text style={styles.errorText}>Irk bulunamadı</Text>
+        <Text style={styles.errorText}>Breed not found</Text>
       </LinearGradient>
     );
   }
@@ -164,7 +164,7 @@ export default function BreedDetailScreen() {
             <View style={styles.metaRow}>
               <View style={styles.metaItem}>
                 <Text style={styles.metaIcon}>⏱️</Text>
-                <Text style={styles.metaText}>{breed.life_span} yıl</Text>
+                <Text style={styles.metaText}>{breed.life_span} years</Text>
               </View>
               <View style={styles.metaDivider} />
               <View style={styles.metaItem}>
@@ -178,7 +178,7 @@ export default function BreedDetailScreen() {
         {/* Mizaç */}
         <GlassCard style={styles.card}>
           <View style={styles.cardInner}>
-            <Text style={styles.sectionTitle}>Mizaç</Text>
+            <Text style={styles.sectionTitle}>Temperament</Text>
             <View style={styles.temperamentContainer}>
               {breed.temperament.split(', ').map((trait, index) => (
                 <View key={index} style={styles.trait}>
@@ -192,7 +192,7 @@ export default function BreedDetailScreen() {
         {/* Açıklama */}
         <GlassCard style={styles.card}>
           <View style={styles.cardInner}>
-            <Text style={styles.sectionTitle}>Hakkında</Text>
+            <Text style={styles.sectionTitle}>About</Text>
             <Text style={styles.description}>{breed.description}</Text>
           </View>
         </GlassCard>
@@ -200,13 +200,13 @@ export default function BreedDetailScreen() {
         {/* Özellikler */}
         <GlassCard style={styles.card}>
           <View style={styles.cardInner}>
-            <Text style={styles.sectionTitle}>Özellikler</Text>
-            <StatBar label="Uyum" value={breed.adaptability} icon="🏠" />
-            <StatBar label="Sevgi" value={breed.affection_level} icon="💕" />
-            <StatBar label="Enerji" value={breed.energy_level} icon="⚡" />
-            <StatBar label="Zeka" value={breed.intelligence} icon="🧠" />
-            <StatBar label="Sosyallik" value={breed.social_needs} icon="👥" />
-            <StatBar label="Bakım" value={breed.grooming} icon="✨" />
+            <Text style={styles.sectionTitle}>Characteristics</Text>
+            <StatBar label="Adaptability" value={breed.adaptability} icon="🏠" />
+            <StatBar label="Affection" value={breed.affection_level} icon="💕" />
+            <StatBar label="Energy" value={breed.energy_level} icon="⚡" />
+            <StatBar label="Intelligence" value={breed.intelligence} icon="🧠" />
+            <StatBar label="Social" value={breed.social_needs} icon="👥" />
+            <StatBar label="Grooming" value={breed.grooming} icon="✨" />
           </View>
         </GlassCard>
 
@@ -216,7 +216,7 @@ export default function BreedDetailScreen() {
             <GlassCard style={styles.card}>
               <View style={[styles.cardInner, styles.wikiRow]}>
                 <Text style={styles.wikiIcon}>📖</Text>
-                <Text style={styles.wikiText}>Wikipedia'da oku</Text>
+                <Text style={styles.wikiText}>Read on Wikipedia</Text>
                 <Text style={styles.wikiArrow}>→</Text>
               </View>
             </GlassCard>
