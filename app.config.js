@@ -15,7 +15,7 @@ export default {
     assetBundlePatterns: ['**/*'],
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.yourname.catalog',
+      bundleIdentifier: 'dev.ayhan.catalog',
       buildNumber: '1',
     },
     newArchEnabled: true,

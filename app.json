@@ -15,7 +15,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yourname.catalog",
+      "bundleIdentifier": "dev.ayhan.catalog",
       "buildNumber": "1"
     },
     "plugins": ["expo-router"],
