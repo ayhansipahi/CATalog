@@ -25,6 +25,10 @@ export default {
     },
     extra: {
       catApiKey: process.env.CAT_API_KEY || '',
+      eas: {
+        projectId: 'e89c8b58-95cd-4d68-93fb-20ff93ff398b',
+      },
     },
+    owner: 'ayhansipahi',
   },
 };
