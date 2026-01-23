@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   StyleSheet,
   View,
@@ -15,9 +15,9 @@ import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { Breed, CatImage } from '@/types/breed';
-import { catApi } from '@/services/catApi';
+import ImageViewing from 'react-native-image-viewing';
 import { useFavoritesStore } from '@/stores/favoritesStore';
+import { useBreed, useBreedImages } from '@/hooks/useBreeds';
 import { GlassCard, StatBar } from '@/components';
 import { theme } from '@/constants/theme';
 
@@ -27,31 +27,32 @@ export default function BreedDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const [breed, setBreed] = useState<Breed | null>(null);
-  const [images, setImages] = useState<CatImage[]>([]);
-  const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
+  const [galleryVisible, setGalleryVisible] = useState(false);
+
+  // React Query hooks with caching
+  const { data: breed, isLoading: breedLoading } = useBreed(id);
+  const { data: images = [] } = useBreedImages(id);
 
   const { isFavorite, toggleFavorite } = useFavoritesStore();
   const favorite = breed ? isFavorite(breed.id) : false;
 
+  // Reset active image when id changes
   useEffect(() => {
-    loadBreed();
+    setActiveImage(0);
+    setGalleryVisible(false);
   }, [id]);
 
-  const loadBreed = async () => {
-    try {
-      const [breedData, imagesData] = await Promise.all([
-        catApi.getBreed(id),
-        catApi.getBreedImages(id, 5),
-      ]);
-      setBreed(breedData);
-      setImages(imagesData);
-    } catch (error) {
-      console.error('Failed to load breed:', error);
-    } finally {
-      setLoading(false);
-    }
+  // Format images for gallery viewer
+  const galleryImages = useMemo(
+    () => images.map((img) => ({ uri: img.url })),
+    [images]
+  );
+
+  const openGallery = (index: number) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setActiveImage(index);
+    setGalleryVisible(true);
   };
 
   const handleFavorite = () => {
@@ -66,7 +67,7 @@ export default function BreedDetailScreen() {
     }
   };
 
-  if (loading) {
+  if (breedLoading) {
     return (
       <LinearGradient colors={theme.colors.gradients.main} style={styles.loading}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
@@ -103,7 +104,9 @@ export default function BreedDetailScreen() {
               }}
             >
               {images.map((img, index) => (
-                <Image key={img.id} source={{ uri: img.url }} style={styles.image} />
+                <Pressable key={img.id} onPress={() => openGallery(index)}>
+                  <Image source={{ uri: img.url }} style={styles.image} />
+                </Pressable>
               ))}
             </ScrollView>
             {/* Dots */}
@@ -225,6 +228,17 @@ export default function BreedDetailScreen() {
 
         <View style={{ height: 100 }} />
       </ScrollView>
+
+      {/* Fullscreen Image Gallery */}
+      <ImageViewing
+        images={galleryImages}
+        imageIndex={activeImage}
+        visible={galleryVisible}
+        onRequestClose={() => setGalleryVisible(false)}
+        swipeToCloseEnabled
+        doubleTapToZoomEnabled
+        presentationStyle="overFullScreen"
+      />
     </View>
   );
 }

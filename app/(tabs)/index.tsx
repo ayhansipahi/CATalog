@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   StyleSheet,
   View,
@@ -11,33 +11,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Breed } from '@/types/breed';
-import { catApi } from '@/services/catApi';
+import { useBreeds } from '@/hooks/useBreeds';
 import { BreedCard, SearchBar } from '@/components';
 import { theme } from '@/constants/theme';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const [breeds, setBreeds] = useState<Breed[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
 
-  useEffect(() => {
-    loadBreeds();
-  }, []);
-
-  const loadBreeds = async () => {
-    try {
-      const data = await catApi.getBreeds();
-      setBreeds(data);
-    } catch (error) {
-      console.error('Failed to load breeds:', error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
+  const {
+    data: breeds = [],
+    isLoading,
+    isFetching,
+    refetch,
+  } = useBreeds();
 
   const filteredBreeds = useMemo(() => {
     if (!search.trim()) return breeds;
@@ -49,12 +37,7 @@ export default function HomeScreen() {
     );
   }, [breeds, search]);
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    loadBreeds();
-  };
-
-  const renderBreed = ({ item, index }: { item: Breed; index: number }) => (
+  const renderBreed = ({ item }: { item: Breed }) => (
     <View style={{ flex: 0.5 }}>
       <BreedCard
         breed={item}
@@ -63,7 +46,8 @@ export default function HomeScreen() {
     </View>
   );
 
-  if (loading) {
+  // Show loading only on first load (no cached data)
+  if (isLoading && breeds.length === 0) {
     return (
       <LinearGradient colors={theme.colors.gradients.main} style={styles.loading}>
         <ActivityIndicator size="large" color={theme.colors.primary} />
@@ -87,8 +71,8 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
+            refreshing={isFetching && !isLoading}
+            onRefresh={refetch}
             tintColor={theme.colors.primary}
           />
         }
